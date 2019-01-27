@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/HomeDetailPage.dart';
 import 'package:english_words/english_words.dart';
@@ -10,7 +11,8 @@ class HomePage extends StatefulWidget {
 
 class RandomWordsState extends State<HomePage> {
   // 保存建议的单词对
-  final _suggestions = <WordPair>[];
+  List<WordPair> _suggestions = new List();
+  ScrollController _scrollController = new ScrollController();
   // 集合存储用户喜欢（收藏）的单词对
   final _saved = new Set<WordPair>();
 
@@ -24,6 +26,48 @@ class RandomWordsState extends State<HomePage> {
       "https://avatars2.githubusercontent.com/u/20411648?s=460&v=4"),fit: BoxFit.cover,);
 
   @override
+  void initState() {
+    super.initState();
+    _suggestions.addAll(generateWordPairs().take(10));
+    _scrollController.addListener(() {
+      print("滑动pixels："+_scrollController.position.pixels.toString());
+      print("滑动maxScrollExtent："+_scrollController.position.maxScrollExtent.toString());
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print("loadMore");
+        _getMoreData();
+      }
+    });
+  }
+
+  // 处理下拉刷新
+  Future<Null> _handleRefresh() async {
+    await Future.delayed(Duration(seconds: 3), () {
+      print('refresh');
+      setState(() {
+        _suggestions.clear();
+        _suggestions.addAll(generateWordPairs().take(20));
+        return null;
+      });
+    });
+  }
+
+  // 加载更多
+  Future _getMoreData() async {
+    print("开始加载更多");
+    await Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _suggestions.addAll(generateWordPairs().take(10));
+        return null;
+      });
+    });
+
+  }
+
+
+
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold (
       appBar: new AppBar(
@@ -32,34 +76,32 @@ class RandomWordsState extends State<HomePage> {
           new IconButton(icon: new Icon(Icons.share), onPressed: _pushSaved),
         ],
       ),
-
-
-      body: _buildSuggestions(),
+      body: new RefreshIndicator(
+        child:  _buildSuggestions(),
+        onRefresh: _handleRefresh,
+      )
     );
+
   }
+
 
   // listView 列表
   Widget _buildSuggestions() {
     return new ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        // 对于每个建议的单词对都会调用一次itemBuilder，然后将单词对添加到ListTile行中
-        // 在偶数行，该函数会为单词对添加一个ListTile row.
-        // 在奇数行，该函数会添加一个分割线widget，来分隔相邻的词对。
-        // 注意，在小屏幕上，分割线看起来可能比较吃力。
+        itemCount: _suggestions.length + 1,
         itemBuilder: (context, i) {
           // 在每一列之前，添加一个1像素高的分隔线widget
           if (i.isOdd) return new Divider();
 
-          // 语法 "i ~/ 2" 表示i除以2，但返回值是整形（向下取整），比如i为：1, 2, 3, 4, 5
-          // 时，结果为0, 1, 1, 2, 2， 这可以计算出ListView中减去分隔线后的实际单词对数量
-          final index = i ~/ 2;
-          // 如果是建议列表中最后一个单词对
-          if (index >= _suggestions.length) {
-            // ...接着再生成10个单词对，然后添加到建议列表
-            _suggestions.addAll(generateWordPairs().take(10));
+          // 最后一个单词对
+          if (i == _suggestions.length) {
+            return _buildLoadText();
+          } else {
+            return _buildRow(_suggestions[i]);
           }
-          return _buildRow(_suggestions[index]);
-        }
+        },
+      controller: _scrollController,
     );
   }
   // listView 每一行的内容和样式
@@ -100,6 +142,22 @@ class RandomWordsState extends State<HomePage> {
       },
     );
   }
+
+  Widget _buildLoadText() {
+    return Container(child:  Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Center(
+        child: Text("加载中……"),
+      ),
+    ),color: Colors.white70,);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
   void onItemClick(WordPair pair) {
     print(pair.toString());
     // 跳转详情页面
