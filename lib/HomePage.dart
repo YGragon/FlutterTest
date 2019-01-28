@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class RandomWordsState extends State<HomePage> {
+  //定义一个globalKey, 由于GlobalKey要保持全局唯一性，我们使用静态变量存储
+  static GlobalKey<ScaffoldState> _globalKey= new GlobalKey();
   // 保存建议的单词对
   List<WordPair> _suggestions = new List();
   ScrollController _scrollController = new ScrollController();
@@ -69,11 +71,22 @@ class RandomWordsState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold (
+        key: _globalKey , //设置key
       appBar: new AppBar(
         title: new Text('首页'),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: Icon(Icons.dashboard, color: Colors.white), //自定义图标
+            onPressed: () {
+              // 打开抽屉菜单
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.share), onPressed: _pushSaved),
+          new IconButton(icon: new Icon(Icons.favorite), onPressed: _pushSaved),
         ],
       ),
       body: new RefreshIndicator(
@@ -147,7 +160,7 @@ class RandomWordsState extends State<HomePage> {
     return Container(child:  Padding(
       padding: const EdgeInsets.all(18.0),
       child: Center(
-        child: Text("加载中……"),
+        child: Text("加载中..."),
       ),
     ),color: Colors.white70,);
   }

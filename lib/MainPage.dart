@@ -73,7 +73,6 @@ class MainPageState extends State<MainPageWidget> {
       [
         getTabImage('images/bar_me_unselected.png'),
         getTabImage('images/bar_me_selected.png')
-
       ]
     ];
     /*
@@ -88,33 +87,73 @@ class MainPageState extends State<MainPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Widget userHeader = UserAccountsDrawerHeader(
+      accountName: new Text('Aller_Dong'),
+      accountEmail: new Text('Aller_Dong@163.com'),
+      currentAccountPicture: new CircleAvatar(
+        backgroundImage: AssetImage('images/wali.jpg'),
+        radius: 35.0,
+      ),
+    );
     // 初始化数据
     initData();
     return Scaffold(
-        // 内容
-        body: _pageList[_tabIndex],
-        // 导航栏
-        bottomNavigationBar: new BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            new BottomNavigationBarItem(
-                icon: getTabIcon(0), title: getTabTitle(0)),
-            new BottomNavigationBarItem(
-                icon: getTabIcon(1), title: getTabTitle(1)),
-            new BottomNavigationBarItem(
-                icon: getTabIcon(2), title: getTabTitle(2)),
+      // 内容
+      body: _pageList[_tabIndex],
+      drawer: Drawer(
+        child: ListView(
+          // 去除顶部灰色条
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            userHeader,
+            ListTile(
+              title: Text("item1"),
+              leading: Icon(Icons.favorite),
+            ),
+            ListTile(
+              title: Text("item2"),
+              leading: Icon(Icons.card_giftcard),
+            ),
+            ListTile(
+              title: Text("close"),
+              leading: Icon(Icons.settings),
+            ),
           ],
-          // 点击 item 会有淡入淡出效果
-          type: BottomNavigationBarType.shifting,
-          //默认选中首页
-          currentIndex: _tabIndex,
-          // 图标大小
-          iconSize: 24.0,
-          // 点击事件
-          onTap: (index) {
-            setState(() {
-              _tabIndex = index;
-            });
-          },
-        ));
+        ),
+      ),
+      // 导航栏
+      bottomNavigationBar: new BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          new BottomNavigationBarItem(
+              icon: getTabIcon(0), title: getTabTitle(0)),
+          new BottomNavigationBarItem(
+              icon: getTabIcon(1), title: getTabTitle(1)),
+          new BottomNavigationBarItem(
+              icon: getTabIcon(2), title: getTabTitle(2)),
+        ],
+        // 点击 item 会有淡入淡出效果
+        type: BottomNavigationBarType.shifting,
+        //默认选中首页
+        currentIndex: _tabIndex,
+        // 图标大小
+        iconSize: 24.0,
+        // 点击事件
+        onTap: _onItemTapped,
+      ),
+      floatingActionButton: FloatingActionButton(
+          //悬浮按钮
+          child: Icon(Icons.add),
+          onPressed: _onAdd),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _tabIndex = index;
+    });
+  }
+
+  void _onAdd() {
+    print("点击+号");
   }
 }
