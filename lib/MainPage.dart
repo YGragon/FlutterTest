@@ -87,40 +87,12 @@ class MainPageState extends State<MainPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Widget userHeader = UserAccountsDrawerHeader(
-      accountName: new Text('Aller_Dong'),
-      accountEmail: new Text('Aller_Dong@163.com'),
-      currentAccountPicture: new CircleAvatar(
-        backgroundImage: AssetImage('images/wali.jpg'),
-        radius: 35.0,
-      ),
-    );
+
     // 初始化数据
     initData();
     return Scaffold(
       // 内容
       body: _pageList[_tabIndex],
-      drawer: Drawer(
-        child: ListView(
-          // 去除顶部灰色条
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            userHeader,
-            ListTile(
-              title: Text("item1"),
-              leading: Icon(Icons.favorite),
-            ),
-            ListTile(
-              title: Text("item2"),
-              leading: Icon(Icons.card_giftcard),
-            ),
-            ListTile(
-              title: Text("close"),
-              leading: Icon(Icons.settings),
-            ),
-          ],
-        ),
-      ),
       // 导航栏
       bottomNavigationBar: new BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -140,10 +112,7 @@ class MainPageState extends State<MainPageWidget> {
         // 点击事件
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
-          //悬浮按钮
-          child: Icon(Icons.add),
-          onPressed: _onAdd),
+
     );
   }
 
@@ -153,7 +122,4 @@ class MainPageState extends State<MainPageWidget> {
     });
   }
 
-  void _onAdd() {
-    print("点击+号");
-  }
 }
