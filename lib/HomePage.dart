@@ -30,7 +30,7 @@ class RandomWordsState extends State<HomePage> {
     width: 32,
     height: 32,
     image: NetworkImage(
-        "https://avatars2.githubusercontent.com/u/20411648?s=460&v=4"),
+        "https://profile.csdnimg.cn/9/4/6/1_itxiaodong"),
     fit: BoxFit.cover,
   );
 
@@ -91,7 +91,7 @@ class RandomWordsState extends State<HomePage> {
 
     return new Scaffold(
         key: _globalKey, //设置key
-        drawer: Drawer(
+        drawer: new Drawer(
           child: ListView(
             // 去除顶部灰色条
             padding: EdgeInsets.zero,
@@ -122,7 +122,7 @@ class RandomWordsState extends State<HomePage> {
               icon: Icon(Icons.menu), //自定义图标
               onPressed: () {
                 // 打开抽屉菜单
-                print("打开侧边栏");
+//                print("打开侧边栏");
                 Scaffold.of(context).openDrawer();
 //                _globalKey.currentState.openDrawer();
               },
