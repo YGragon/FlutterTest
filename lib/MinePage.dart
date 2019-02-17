@@ -18,14 +18,21 @@ class Page extends State<MinePage> {
 
   Widget layout(BuildContext context) {
     return new Scaffold(
-      appBar: buildAppBar(context),
       body: new ListView(
+        // 去除顶部灰色状态栏
+        padding: EdgeInsets.zero,
         children: <Widget>[
           header(context),
-          header(context),
-          header(context),
-          header(context),
-          header(context),
+          new ListTile(
+            title: new Text("收藏"),
+            subtitle: new Text("我的收藏"),
+            leading: Icon(Icons.favorite),
+          ),
+          new ListTile(
+            title: new Text("夜间模式"),
+            subtitle: new Text("夜间模式"),
+            leading: Icon(Icons.track_changes),
+          )
         ],
       ),
     );

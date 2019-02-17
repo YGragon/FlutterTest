@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/HomeDetailPage.dart';
-import 'package:flutter_app/MainPage.dart';
+import 'package:flutter_app/Publish.dart';
 import 'package:english_words/english_words.dart';
 
 //定义一个globalKey, 由于GlobalKey要保持全局唯一性，我们使用静态变量存储
@@ -186,7 +186,6 @@ class RandomWordsState extends State<HomePage> {
   }
 
   void onItemClick(WordPair pair) {
-    print(pair.toString());
     // 跳转详情页面
     Navigator.of(context).push(new MaterialPageRoute(
       builder: (context) => HomeDetailPage(
@@ -229,5 +228,9 @@ class RandomWordsState extends State<HomePage> {
 
   void _onAdd() {
     print("点击+号");
+    // 跳转详情页面
+    Navigator.of(context).push(new MaterialPageRoute(
+      builder: (context) => PublishPage(),
+    ));
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/HomePage.dart';
 import 'package:flutter_app/MinePage.dart';
-import 'package:flutter_app/Publish.dart';
+import 'package:flutter_app/FunctionPage.dart';
 import 'package:flutter_app/DrawerDetailPager.dart';
 
 
@@ -87,7 +87,7 @@ class MainPageState extends State<MainPageWidget> {
      */
     _pageList = [
       new HomePage(_globalKey),
-      new PublishPage(),
+      new FunctionPage(),
       new MinePage(),
     ];
   }
@@ -114,14 +114,14 @@ class MainPageState extends State<MainPageWidget> {
           children: <Widget>[
             userHeader,
             ListTile(
-              title: Text("item1"),
+              title: Text("注册登录"),
               leading: Icon(Icons.favorite),
-              onTap: () => _onPageOpen(context, "item1"),
+              onTap: () => _onPageOpen(context, "注册登录"),
             ),
             ListTile(
-              title: Text("item2"),
-              leading: Icon(Icons.card_giftcard),
-              onTap: () => _onPageOpen(context, "item2"),
+              title: Text("设置"),
+              leading: Icon(Icons.settings),
+              onTap: () => _onPageOpen(context, "设置"),
             ),
           ],
         ),
