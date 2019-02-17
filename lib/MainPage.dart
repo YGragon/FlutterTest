@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/HomePage.dart';
 import 'package:flutter_app/MinePage.dart';
 import 'package:flutter_app/Publish.dart';
+import 'package:flutter_app/DrawerDetailPager.dart';
+
 
 class MainPage extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -19,6 +23,9 @@ class MainPageWidget extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPageWidget> {
+  //定义一个globalKey, 由于GlobalKey要保持全局唯一性，我们使用静态变量存储
+  static GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+
   int _tabIndex = 0;
   var tabImages;
   var appBarTitles = ['首页', '发布', '我的'];
@@ -79,7 +86,7 @@ class MainPageState extends State<MainPageWidget> {
      * 三个子界面
      */
     _pageList = [
-      new HomePage(),
+      new HomePage(_globalKey),
       new PublishPage(),
       new MinePage(),
     ];
@@ -87,10 +94,38 @@ class MainPageState extends State<MainPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Widget userHeader = UserAccountsDrawerHeader(
+      accountName: new Text('Aller_Dong'),
+      accountEmail: new Text('Aller_Dong@163.com'),
+      currentAccountPicture: new CircleAvatar(
+        backgroundImage: AssetImage('images/wali.jpg'),
+        radius: 35.0,
+      ),
+    );
 
     // 初始化数据
     initData();
     return Scaffold(
+      key: _globalKey,
+      drawer: new Drawer(
+        child: ListView(
+          // 去除顶部灰色条
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            userHeader,
+            ListTile(
+              title: Text("item1"),
+              leading: Icon(Icons.favorite),
+              onTap: () => _onPageOpen(context, "item1"),
+            ),
+            ListTile(
+              title: Text("item2"),
+              leading: Icon(Icons.card_giftcard),
+              onTap: () => _onPageOpen(context, "item2"),
+            ),
+          ],
+        ),
+      ),
       // 内容
       body: _pageList[_tabIndex],
       // 导航栏
@@ -112,7 +147,6 @@ class MainPageState extends State<MainPageWidget> {
         // 点击事件
         onTap: _onItemTapped,
       ),
-
     );
   }
 
@@ -122,4 +156,12 @@ class MainPageState extends State<MainPageWidget> {
     });
   }
 
+  // 跳转侧边栏详情页面
+  void _onPageOpen(context, String title) {
+    // 关闭侧边栏
+    Navigator.pop(context);
+    // 跳转页面
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => DrawerDetailPager(title)));
+  }
 }

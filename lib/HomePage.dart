@@ -1,18 +1,24 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/HomeDetailPage.dart';
+import 'package:flutter_app/MainPage.dart';
 import 'package:english_words/english_words.dart';
-import 'package:flutter_app/DrawerDetailPager.dart';
 
+//定义一个globalKey, 由于GlobalKey要保持全局唯一性，我们使用静态变量存储
+GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
 class HomePage extends StatefulWidget {
+
+
+  HomePage(GlobalKey key) {
+    _globalKey = key;
+  }
+
   @override
   createState() => new RandomWordsState();
 }
 
 class RandomWordsState extends State<HomePage> {
-  //定义一个globalKey, 由于GlobalKey要保持全局唯一性，我们使用静态变量存储
-  static GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   // 保存建议的单词对
   List<WordPair> _suggestions = new List();
   ScrollController _scrollController = new ScrollController();
@@ -29,8 +35,7 @@ class RandomWordsState extends State<HomePage> {
   final _userHeadImage = Image(
     width: 32,
     height: 32,
-    image: NetworkImage(
-        "https://profile.csdnimg.cn/9/4/6/1_itxiaodong"),
+    image: NetworkImage("https://profile.csdnimg.cn/9/4/6/1_itxiaodong"),
     fit: BoxFit.cover,
   );
 
@@ -74,47 +79,7 @@ class RandomWordsState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget userHeader = UserAccountsDrawerHeader(
-      accountName: new Text('Aller_Dong'),
-      accountEmail: new Text('Aller_Dong@163.com'),
-      currentAccountPicture: new CircleAvatar(
-        backgroundImage: AssetImage('images/wali.jpg'),
-        radius: 35.0,
-      ),
-    );
-
-    // 跳转侧边栏详情页面
-    void _onPageOpen(context, String title) {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => DrawerDetailPager(title)));
-    }
-
     return new Scaffold(
-        key: _globalKey, //设置key
-        drawer: new Drawer(
-          child: ListView(
-            // 去除顶部灰色条
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              userHeader,
-              ListTile(
-                title: Text("item1"),
-                leading: Icon(Icons.favorite),
-                onTap: () => _onPageOpen(context, "item1"),
-              ),
-              ListTile(
-                title: Text("item2"),
-                leading: Icon(Icons.card_giftcard),
-                onTap: () => _onPageOpen(context, "item2"),
-              ),
-              ListTile(
-                title: Text("item3"),
-                leading: Icon(Icons.settings),
-                onTap: () => _onPageOpen(context, "item3"),
-              ),
-            ],
-          ),
-        ),
         appBar: new AppBar(
           title: new Text('首页'),
           leading: Builder(builder: (context) {
@@ -122,9 +87,9 @@ class RandomWordsState extends State<HomePage> {
               icon: Icon(Icons.menu), //自定义图标
               onPressed: () {
                 // 打开抽屉菜单
-//                print("打开侧边栏");
-                Scaffold.of(context).openDrawer();
-//                _globalKey.currentState.openDrawer();
+                print("打开侧边栏");
+//                Scaffold.of(context).openDrawer();
+                _globalKey.currentState.openDrawer();
               },
             );
           }),
@@ -134,7 +99,7 @@ class RandomWordsState extends State<HomePage> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          //悬浮按钮
+            //悬浮按钮
             child: Icon(Icons.add),
             onPressed: _onAdd),
         body: new RefreshIndicator(
