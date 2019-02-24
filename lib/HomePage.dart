@@ -46,22 +46,20 @@ class RandomWordsState extends State<HomePage> {
     _scrollController.addListener(() {
 //      print("滑动pixels："+_scrollController.position.pixels.toString());
 //      print("滑动maxScrollExtent："+_scrollController.position.maxScrollExtent.toString());
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        print("loadMore");
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _getMoreData();
       }
     });
   }
 
   // 处理下拉刷新
-  Future<Null> _handleRefresh() async {
+  Future _handleRefresh() async {
     await Future.delayed(Duration(seconds: 3), () {
       print('refresh');
       setState(() {
         _suggestions.clear();
         _suggestions.addAll(generateWordPairs().take(20));
-        return null;
+        return _suggestions;
       });
     });
   }
@@ -71,8 +69,9 @@ class RandomWordsState extends State<HomePage> {
     print("开始加载更多");
     await Future.delayed(Duration(seconds: 3), () {
       setState(() {
+        // 这里是本地数据，因此在无网的时候也会加载数据
         _suggestions.addAll(generateWordPairs().take(10));
-        return null;
+        return _suggestions;
       });
     });
   }
@@ -119,7 +118,7 @@ class RandomWordsState extends State<HomePage> {
 
         // 最后一个单词对
         if (i == _suggestions.length) {
-          return _buildLoadText();
+          return _buildLoadMore();
         } else {
           return _buildRow(_suggestions[i]);
         }
@@ -167,12 +166,13 @@ class RandomWordsState extends State<HomePage> {
     );
   }
 
-  Widget _buildLoadText() {
+  Widget _buildLoadMore() {
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Center(
-          child: Text("加载中..."),
+          // 转圈加载中
+          child: new CircularProgressIndicator(),
         ),
       ),
       color: Colors.white70,

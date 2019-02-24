@@ -64,7 +64,7 @@ class MainPageState extends State<MainPageWidget> {
     return new Image.asset(path, width: 24.0, height: 24.0);
   }
 
-  void initData() {
+  void _initData() {
     /*
      * 初始化选中和未选中的icon
      */
@@ -104,7 +104,7 @@ class MainPageState extends State<MainPageWidget> {
     );
 
     // 初始化数据
-    initData();
+    _initData();
     return Scaffold(
       key: _globalKey,
       drawer: new Drawer(
