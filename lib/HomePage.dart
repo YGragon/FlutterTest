@@ -1,8 +1,14 @@
 import 'dart:async';
+import 'package:english_words/english_words.dart';
+import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/HomeDetailPage.dart';
 import 'package:flutter_app/Publish.dart';
-import 'package:english_words/english_words.dart';
+import 'dart:convert';
+import 'package:flutter_app/model/Article.dart';
+import 'package:flutter_app/http/APIService.dart';
+
 
 //定义一个globalKey, 由于GlobalKey要保持全局唯一性，我们使用静态变量存储
 GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
@@ -19,6 +25,9 @@ class HomePage extends StatefulWidget {
 }
 
 class RandomWordsState extends State<HomePage> {
+  List<ArticleBean> _datas  = new List();
+  int _page = 0; //加载的页数
+
   // 保存建议的单词对
   List<WordPair> _suggestions = new List();
   ScrollController _scrollController = new ScrollController();
@@ -42,6 +51,7 @@ class RandomWordsState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getData();
     _suggestions.addAll(generateWordPairs().take(20));
     _scrollController.addListener(() {
 //      print("滑动pixels："+_scrollController.position.pixels.toString());
@@ -50,6 +60,21 @@ class RandomWordsState extends State<HomePage> {
         _getMoreData();
       }
     });
+  }
+
+  Future<Null> getData() async{
+    _page = 0;
+    print("$_page");
+
+    APIService().getArticleList((Article _articleModel){
+      setState(() {
+        _datas = _articleModel.data.datas;
+      });
+      print("总数："+'${_articleModel.data.total}');
+      print("返回的总数："+_articleModel.data.total.toString());
+      print("返回的总数："+_articleModel.data.datas.length.toString());
+      print("返回的title："+_datas[0].title.toString());
+    }, _page);
   }
 
   // 处理下拉刷新
@@ -234,3 +259,4 @@ class RandomWordsState extends State<HomePage> {
     ));
   }
 }
+

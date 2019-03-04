@@ -28,7 +28,7 @@ class MainPageState extends State<MainPageWidget> {
 
   int _tabIndex = 0;
   var tabImages;
-  var appBarTitles = ['首页', '发布', '我的'];
+  var appBarTitles = ['首页', '功能', '我的'];
   /*
    * 存放三个页面，跟fragmentList一样
    */
