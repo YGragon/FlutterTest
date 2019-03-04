@@ -1,6 +1,6 @@
 # flutter_app
 
-Flutter 入门练习
+Flutter 入门练习（停止维护），参考阿里的项目 **[alibaba/flutter-go](https://github.com/alibaba/flutter-go)**
 
 
 ![home](/screenshot/home.png)
